@@ -1,6 +1,8 @@
 package Igrica;
 
 import java.io.BufferedReader;
+import java.util.Map;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -9,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.JComboBox;
@@ -19,6 +22,28 @@ public class Main {
 
 	public static void main(String[] args) throws SQLException {
 
+		HashMap<Integer,Player> map = new HashMap<>();
+		Player player = new Player("Nix");
+		Player player2 = new Player("Rokva");
+		Player player3 = new Player("Rokva");
+		Player player4 = new Player("Rokva");
+		int capacity =10;
+		map.put(1, player);
+		for (int i = 1; i<capacity;i++)
+		{
+			if(!map.containsKey(i))
+			{	
+				map.put(i, player);
+				break;
+			}
+	   
+		}
+//		map.put(1, player);
+//		map.put(2, player2);
+//		System.out.println(map.values());
+//		map.remove(1);
+		System.out.println(map.values());
+		
 //		DatabaseConnection dbConnection1 = new DatabaseConnection();
 //		Connection connection = dbConnection1.createConnection();
 //

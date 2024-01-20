@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import Igrica.DatabaseConnection;
 import Igrica.Player;
+import MVC.Model;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ public class ShopDialog extends JDialog {
 	private JButton btnNewButton_1;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
+	private Model model = new Model();
 
 	public ShopDialog(Player player) {
 		this.player = player;
@@ -72,21 +74,13 @@ public class ShopDialog extends JDialog {
 					if (confirmed == JOptionPane.YES_OPTION) {
 						player.setGold(player.getGold() - 20);
 						player.getArmor().setHeadArmor(true);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set health_player=?,gold =?,armor=1 where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getHealth());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
+							model.UpdateHealthGoldArmor(player.getHealth(),player.getGold(),player.getUserName(),1);
+						} catch (SQLException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
 						}
+				
 
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnBuy.setEnabled(false);
@@ -136,21 +130,13 @@ public class ShopDialog extends JDialog {
 
 						player.setGold(player.getGold() - 20);
 						player.getArmor().setChestArmor(true);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set health_player=?,gold =?,armor=2 where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getHealth());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
+							model.UpdateHealthGoldArmor(player.getHealth(),player.getGold(),player.getUserName(),2);
+						} catch (SQLException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
 						}
+	
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnBuy_1.setEnabled(false);
 						btnBuy_2.setEnabled(true);
@@ -186,21 +172,11 @@ public class ShopDialog extends JDialog {
 					if (confirmed == JOptionPane.YES_OPTION) {
 						player.setGold(player.getGold() - 20);
 						player.getArmor().setLegArmor(true);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set health_player=?,gold =?,armor=3 where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getHealth());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateHealthGoldArmor(player.getHealth(),player.getGold(),player.getUserName(),3);
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
 						textField.setText("You have :" + player.getGold() + " gold");
 
@@ -237,21 +213,11 @@ public class ShopDialog extends JDialog {
 					if (confirmed == JOptionPane.YES_OPTION) {
 						player.setGold(player.getGold() - 20);
 						player.getArmor().setFeetArmor(true);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set health_player=?,gold =?,armor=4 where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getHealth());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateHealthGoldArmor(player.getHealth(),player.getGold(),player.getUserName(),4);
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnBuy_3.setEnabled(false);
@@ -300,22 +266,13 @@ public class ShopDialog extends JDialog {
 						player.setGold(player.getGold() - 20);
 						player.getWeapon().setWeaponEnchant(1);
 						player.getWeapon().setWeaponDamage(player.getWeapon().getWeaponDamage() + 3);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set weaponEnchant=?,gold =? where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getWeapon().getWeaponEnchant());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateWpnEnchGold(player.getWeapon().getWeaponEnchant(),player.getGold(),player.getUserName());
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
+						
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnNewButton.setEnabled(false);
 						btnNewButton_1.setEnabled(true);
@@ -350,21 +307,11 @@ public class ShopDialog extends JDialog {
 						player.setGold(player.getGold() - 20);
 						player.getWeapon().setWeaponEnchant(2);
 						player.getWeapon().setWeaponDamage(player.getWeapon().getWeaponDamage() + 3);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set weaponEnchant=?,gold =? where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getWeapon().getWeaponEnchant());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateWpnEnchGold(player.getWeapon().getWeaponEnchant(),player.getGold(),player.getUserName());
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnNewButton_1.setEnabled(false);
@@ -400,21 +347,11 @@ public class ShopDialog extends JDialog {
 						player.setGold(player.getGold() - 20);
 						player.getWeapon().setWeaponEnchant(3);
 						player.getWeapon().setWeaponDamage(player.getWeapon().getWeaponDamage() + 3);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set weaponEnchant=?,gold =? where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getWeapon().getWeaponEnchant());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateWpnEnchGold(player.getWeapon().getWeaponEnchant(),player.getGold(),player.getUserName());
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnNewButton_2.setEnabled(false);
@@ -450,21 +387,11 @@ public class ShopDialog extends JDialog {
 						player.setGold(player.getGold() - 20);
 						player.getWeapon().setWeaponEnchant(4);
 						player.getWeapon().setWeaponDamage(player.getWeapon().getWeaponDamage() + 3);
-						DatabaseConnection dbCon = new DatabaseConnection();
-						Connection connection = dbCon.createConnection();
-						PreparedStatement ps;
-						String sqlSt = " update player set weaponEnchant=?,gold =? where name_player=?";
 						try {
-							ps = connection.prepareStatement(sqlSt);
-							ps.setInt(2, player.getGold());
-							ps.setInt(1, player.getWeapon().getWeaponEnchant());
-							ps.setString(3, player.getUserName());
-							ps.execute();
-
-							ps.close();
-						} catch (SQLException e1) {
+							model.UpdateWpnEnchGold(player.getWeapon().getWeaponEnchant(),player.getGold(),player.getUserName());
+						} catch (SQLException e2) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							e2.printStackTrace();
 						}
 						textField.setText("You have :" + player.getGold() + " gold");
 						btnNewButton_3.setEnabled(false);

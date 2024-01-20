@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import Igrica.DatabaseConnection;
 import MVC.Controller;
 import MVC.Frame;
+import MVC.Model;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -33,6 +34,7 @@ public class PlayerDialog extends JDialog {
 	private JTextField txtName;
 	private JComboBox<String> jcbMap;
 	private JComboBox<String> jcbClass;
+	private Model model = new Model();
 
 	public PlayerDialog() {
 		setBounds(100, 100, 450, 300);
@@ -112,19 +114,10 @@ public class PlayerDialog extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						try {
 							String name = getTxtName();
-							String mapName = getMapComboBoxText();
 							String className = getClassComboBoxText();
 
-							DatabaseConnection dbCon = new DatabaseConnection();
-							Connection connection = dbCon.createConnection();
-							PreparedStatement ps = connection
-									.prepareStatement("insert into Player values(?,100,10,1,?,1,10,0,0,1,1,?)");
-							ps.setString(1, name);
-							ps.setString(2, className);
-							int indexMap = jcbMap.getSelectedIndex();
-							ps.setInt(3, indexMap + 1);
-							ps.execute();
-							connection.close();
+							int indexMap = (jcbMap.getSelectedIndex()+1);
+							model.InsertPlayer(name, className, indexMap);
 							dispose();
 						} catch (Exception ex) {
 							System.out.println(ex);

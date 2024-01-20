@@ -8,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import Dialogs.PlayerDialog;
-import Dialogs.ShowCharactersDialog;
 import Igrica.DatabaseConnection;
 import Igrica.Player;
 
@@ -54,6 +53,7 @@ public class Frame extends JFrame {
 	private JButton btnShop;
 	private JComboBox<String> comboBox;
 
+
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
@@ -83,20 +83,6 @@ public class Frame extends JFrame {
 		});
 		panel.add(btnNewButton);
 
-		JButton BtnShowCharacters = new JButton("Show All Characters");
-		BtnShowCharacters.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					controller.ShowAllCharacters();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
-		});
-		panel.add(BtnShowCharacters);
-
 		contentPane.setLayout(null);
 		contentPane.add(panel);
 
@@ -105,6 +91,7 @@ public class Frame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
+					controller.fillJcb();
 					controller.FillCharacters();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
@@ -113,23 +100,24 @@ public class Frame extends JFrame {
 			}
 		});
 
-		try {
-			Statement st;
-			st = connection.createStatement();
-			ResultSet rs1;
-			rs1 = st.executeQuery("Select * from Player");
-
-			while (rs1.next()) {
-				jcbPlayer.addItem(rs1.getString("name_player"));
-			}
-			st.close();
-		} catch (SQLException e2) {
-			e2.printStackTrace();
-		}
+//		try {
+//			Statement st;
+//			st = connection.createStatement();
+//			ResultSet rs1;
+//			rs1 = st.executeQuery("Select * from Player");
+//
+//			while (rs1.next()) {
+//				jcbPlayer.addItem(rs1.getString("name_player"));
+//			}
+//			st.close();
+//		} catch (SQLException e2) {
+//			e2.printStackTrace();
+//		}
 
 		jcbPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textArea.setText("");
+//				controller.fillJcb();
 				try {
 					controller.UpdateTxtField();
 				} catch (SQLException e1) {
@@ -207,7 +195,12 @@ public class Frame extends JFrame {
 		btnPotion.setEnabled(false);
 		btnPotion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.UsePotion();
+				try {
+					controller.UsePotion();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnPotion.setBounds(368, 113, 89, 23);

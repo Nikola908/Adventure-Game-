@@ -14,9 +14,9 @@ import javax.swing.table.DefaultTableModel;
 
 import Dialogs.PlayerDialog;
 import Dialogs.ShopDialog;
-import Dialogs.ShowCharactersDialog;
 import Igrica.DatabaseConnection;
 import Igrica.Player;
+
 
 public class Controller {
 
@@ -42,9 +42,7 @@ public class Controller {
 		dialog.setVisible(true);
 
 		JComboBox<String> jcbMap = dialog.getJComboBoxMap();
-		Statement st = connection.createStatement();
-		ResultSet rs;
-		rs = st.executeQuery("Select * from Map");
+		ResultSet rs =model.SelectMap();
 		while (rs.next()) {
 			jcbMap.addItem(rs.getString("name_map"));
 		}
@@ -55,21 +53,23 @@ public class Controller {
 
 		Statement st = connection.createStatement();
 		JComboBox<String> jcb = frame.getJcbPlayer();
-		String sqlSt = "select * from Player p join Weapon w on (p.ID_weapon=w.ID_weapon) join Map m on (m.ID_map=p.ID_map)";
-		ResultSet rs = st.executeQuery(sqlSt);
+		ResultSet rs = model.getPlayersWepMap();
 		jcb.removeAllItems();
 		while (rs.next()) {
 			jcb.addItem(rs.getString(2));
 		}
 	}
 
+	public void fillJcb() throws SQLException
+	{
+		ResultSet rs =model.getPlayersRS();
+		while (rs.next()) {
+			frame.getJcbPlayer().addItem(rs.getString("name_player"));
+		}
+	}
 	public void UpdateTxtField() throws SQLException {
 
-		Statement st = connection.createStatement();
-		String jcbText = frame.getJcbPlayerText();
-		String sqlSt = "select * from Player p join Weapon w on (p.ID_weapon=w.ID_weapon) join Map m on (m.ID_map=p.ID_map)";
-		ResultSet rs = st.executeQuery(sqlSt);
-
+		ResultSet rs =model.getPlayersWepMap();
 		while (rs.next()) {
 			if (model.getPlayers().size() >= rs.getRow()) {
 			} else {
@@ -81,11 +81,7 @@ public class Controller {
 
 		}
 
-		PreparedStatement ps;
-		String sqlSt1 = "select * from Player p join Weapon w on (p.ID_weapon=w.ID_weapon) join Map m on (m.ID_map=p.ID_map) where name_player = ?";
-		ps = connection.prepareStatement(sqlSt1);
-		ps.setString(1, jcbText);
-		ResultSet rs1 = ps.executeQuery();
+		ResultSet rs1 =model.getPlayersWepMap(frame.getJcbPlayerText());
 		while (rs1.next()) {
 			for (int i = frame.getComboBoxLevel().getItemCount(); i > 1; i--) {
 				frame.getComboBoxLevel().removeItemAt(i - 1);
@@ -102,7 +98,7 @@ public class Controller {
 			frame.setBtns(true);
 		}
 
-		st.close();
+
 
 	}
 
@@ -132,12 +128,7 @@ public class Controller {
 			Random rand = new Random();
 			if (rand.nextInt(3) == 0) {
 				player.setPotion(player.getPotion() + 1);
-				PreparedStatement ps;
-				String sqlSt = " update player set potion = ? where name_player=?";
-				ps = connection.prepareStatement(sqlSt);
-				ps.setInt(1, player.getPotion());
-				ps.setString(2, player.getUserName());
-				ps.execute();
+				model.UpdatePotion(player.getPotion(), player.getUserName());
 				JOptionPane.showMessageDialog(null, "A Boss dropped a potion for you!", "Potion!",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -202,26 +193,15 @@ public class Controller {
 
 	}
 
-	public void UsePotion() {
+	public void UsePotion() throws SQLException {
 		if (player.getPotion() == 0) {
 			frame.getTextArea().setText("You have 0 potions!");
 
 		} else {
 
 			frame.getTextArea().setText("Last Action: " + player.UsePotion());
-			DatabaseConnection dbCon = new DatabaseConnection();
-			connection = dbCon.createConnection();
-			PreparedStatement ps;
-			String sqlSt = " update player set potion = ? where name_player=?";
-			try {
-				ps = connection.prepareStatement(sqlSt);
-				ps.setInt(1, player.getPotion());
-				ps.setString(2, player.getUserName());
-				ps.execute();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			model.UpdatePotion(player.getPotion(),player.getUserName());
+			
 
 		}
 		frame.getTxtAreaCharacter().setText("Health player :" + player.getHealth() + " Energy :" + player.getEnergy()
@@ -229,40 +209,6 @@ public class Controller {
 
 	}
 
-	public void ShowAllCharacters() throws SQLException {
-		Statement st = connection.createStatement();
-		ResultSet rs;
-		rs = st.executeQuery("Select * from Player");
-		ResultSetMetaData rsmd = rs.getMetaData();
-		ShowCharactersDialog ScDialog = new ShowCharactersDialog();
-		ScDialog.setVisible(true);
-		DefaultTableModel defaultModel = (DefaultTableModel) ScDialog.getTablePlayer().getModel();
-		int cols = rsmd.getColumnCount();
-		String[] colName = new String[cols];
-		for (int i = 0; i < cols; i++)
-			colName[i] = rsmd.getColumnName(i + 1);
-
-		defaultModel.setColumnIdentifiers(colName);
-
-		String NamePlayer, ClassPlayer, IDPlayer, HealthPlayer, Energy, Potion, IDBoss, IDWeapon, IDMap, MaxLevel;
-		while (rs.next()) {
-			IDPlayer = rs.getString(1);
-			NamePlayer = rs.getString(2);
-			HealthPlayer = rs.getString(3);
-			Energy = rs.getString(4);
-			Potion = rs.getString(5);
-			ClassPlayer = rs.getString(6);
-			MaxLevel = rs.getString(7);
-			IDBoss = rs.getString(8);
-			IDWeapon = rs.getString(9);
-			IDMap = rs.getString(10);
-			String[] row = { IDPlayer, NamePlayer, HealthPlayer, Energy, Potion, ClassPlayer, MaxLevel, IDBoss,
-					IDWeapon, IDMap };
-
-			defaultModel.addRow(row);
-		}
-		st.close();
-	}
 
 	public void openShop() {
 		ShopDialog shopDialog = new ShopDialog(player);
